@@ -4,7 +4,7 @@ halreader
 [![Build Status](https://travis-ci.org/qmetric/halreader.png)](https://travis-ci.org/qmetric/halreader)
 
 HAL+JSON parser Java library for wrapping [HalBuilder](https://github.com/HalBuilder). The underlying [HalBuilder](https://github.com/HalBuilder) is an
-excellent library and attempts to generify XML and JSON parsing of Hal resources through abstract interfaces.
+excellent library and attempts to generify XML and JSON parsing and building of Hal resources through abstract interfaces.
 
 This library wraps the reading facilities of HalBuilder to allow greater explicit control of certain JSON configuration features.
 

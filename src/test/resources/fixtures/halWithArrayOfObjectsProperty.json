@@ -1,0 +1,19 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://localhost/something/1"
+    }
+  },
+  "array": [
+    {
+      "text": "abc",
+      "num": 1,
+      "bool": true
+    },
+    {
+      "text": "def",
+      "num": 2,
+      "bool": false
+    }
+  ]
+}

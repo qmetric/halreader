@@ -1,0 +1,12 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://localhost/something/1"
+    }
+  },
+  "textVal": "str",
+  "numVal": 100,
+  "boolVal": true,
+  "emptyVal": "",
+  "nullVal": null
+}

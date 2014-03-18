@@ -1,0 +1,25 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://localhost/self/1"
+    },
+    "link": {
+      "href": "https://localhost/link/1"
+    },
+    "links": [
+      {
+        "href": "https://localhost/links/1"
+      },
+      {
+        "href": "https://localhost/links/2"
+      }
+    ]
+  },
+  "strVal": "str",
+  "numberVal": 100,
+  "obj": {
+    "text": "abc",
+    "num": 1,
+    "bool": true
+  }
+}

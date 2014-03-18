@@ -1,0 +1,17 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://localhost/self/1"
+    }
+  },
+  "_embedded": {
+    "embeddedResource": {
+      "_links": {
+        "self": {
+          "href": "https://localhost/embedded/1"
+        }
+      },
+      "array": ["a", "b"]
+    }
+  }
+}

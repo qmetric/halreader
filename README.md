@@ -26,3 +26,13 @@ Usage
 ```
 
 See Javadoc for available HalResource methods.
+
+Library available from [Maven central repository](http://search.maven.org/)
+
+```
+<dependency>
+    <groupId>com.qmetric</groupId>
+    <artifactId>halreader</artifactId>
+    <version>${VERSION}</version>
+</dependency>
+```

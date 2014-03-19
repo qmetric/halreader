@@ -12,7 +12,7 @@ class HalReaderTest extends Specification {
 
     final halReader = new HalReader(new ObjectMapper())
 
-    def "should get self link"()
+    def "should read links"()
     {
         when:
         final resource = halReader.read(reader("/fixtures/halWithLinks.json"))
@@ -26,7 +26,7 @@ class HalReaderTest extends Specification {
         resource.getLinksByRel("links").collect { it.href } == ["https://localhost/links/1", "https://localhost/links/2"]
     }
 
-    def "should parse property value as string"()
+    def "should read property values as strings"()
     {
         when:
         final resource = halReader.read(reader("/fixtures/halWithPrimitiveProperties.json"))
@@ -40,7 +40,7 @@ class HalReaderTest extends Specification {
         resource.getValueAsString("emptyVal") == Optional.of("")
     }
 
-    @Unroll def "should parse property containing complex object"()
+    @Unroll def "should read property values as complex objects"()
     {
         when:
         final resource = halReader.read(reader("/fixtures/$resourcePath"))
@@ -59,7 +59,7 @@ class HalReaderTest extends Specification {
         "halWithArrayOfObjectsProperty.json" | "array"      | new TypeToken<List<TestObject>>() {}    | Optional.of([new TestObject("abc", 1, true), new TestObject("def", 2, false)])
     }
 
-    def "should parse embedded resources"()
+    def "should read embedded resources"()
     {
         given:
         final resource = halReader.read(reader("/fixtures/halWithEmbeddedResource.json"))

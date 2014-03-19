@@ -15,7 +15,7 @@ Features
 
 * Reading of HAL properties containing JSON objects or arrays
 * [Jackson](https://github.com/FasterXML) configuration exposed for allowing greater control of JSON deserialisation
-* Delegates to common HalBuilder read functionality
+* Delegates to other common HalBuilder read functionality
 
 Usage
 -----

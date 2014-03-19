@@ -1,8 +1,8 @@
 package com.qmetric.hal.reader
 
-import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.common.base.Optional
+import com.google.common.reflect.TypeToken
 import org.apache.commons.lang3.builder.EqualsBuilder
 import org.apache.commons.lang3.builder.HashCodeBuilder
 import spock.lang.Specification
@@ -49,14 +49,14 @@ class HalReaderTest extends Specification {
         resource.getValueAsObject(propertyName, type) == expected
 
         where:
-        resourcePath                         | propertyName | type                                        | expected
-        "halWithObjectProperty.json"         | "obj"        | new TypeReference<TestObject>() {}          | Optional.of(new TestObject("abc", 1, true))
-        "halWithNestedObjectProperty.json"   | "parent"     | new TypeReference<TestParentObject>() {}    | Optional.of(new TestParentObject(new TestObject("abc", 1, true)))
-        "halWithObjectProperty.json"         | "missing"    | new TypeReference<TestObject>() {}          | Optional.absent()
-        "halWithObjectProperty.json"         | "obj"        | new TypeReference<Map<String, Object>>() {} | Optional.of([text: "abc", num: 1, bool: true])
-        "halWithArrayProperty.json"          | "array"      | new TypeReference<List<String>>() {}        | Optional.of(["a", "b"])
-        "halWithEmptyArrayProperty.json"     | "array"      | new TypeReference<List<String>>() {}        | Optional.of([])
-        "halWithArrayOfObjectsProperty.json" | "array"      | new TypeReference<List<TestObject>>() {}    | Optional.of([new TestObject("abc", 1, true), new TestObject("def", 2, false)])
+        resourcePath                         | propertyName | type                                    | expected
+        "halWithObjectProperty.json"         | "obj"        | TypeToken.of(TestObject.class)          | Optional.of(new TestObject("abc", 1, true))
+        "halWithNestedObjectProperty.json"   | "parent"     | TypeToken.of(TestParentObject.class)    | Optional.of(new TestParentObject(new TestObject("abc", 1, true)))
+        "halWithObjectProperty.json"         | "missing"    | TypeToken.of(TestObject.class)          | Optional.absent()
+        "halWithObjectProperty.json"         | "obj"        | new TypeToken<Map<String, Object>>() {} | Optional.of([text: "abc", num: 1, bool: true])
+        "halWithArrayProperty.json"          | "array"      | new TypeToken<List<String>>() {}        | Optional.of(["a", "b"])
+        "halWithEmptyArrayProperty.json"     | "array"      | new TypeToken<List<String>>() {}        | Optional.of([])
+        "halWithArrayOfObjectsProperty.json" | "array"      | new TypeToken<List<TestObject>>() {}    | Optional.of([new TestObject("abc", 1, true), new TestObject("def", 2, false)])
     }
 
     def "should parse embedded resources"()
@@ -69,7 +69,7 @@ class HalReaderTest extends Specification {
 
         then:
         embedded.getResourceLink().get().href == "https://localhost/embedded/1"
-        embedded.getValueAsObject("array", new TypeReference<List<String>>() {}) == Optional.of(["a", "b"])
+        embedded.getValueAsObject("array", new TypeToken<List<String>>() {}) == Optional.of(["a", "b"])
     }
 
     def "should return nothing when embedded resources not found"()

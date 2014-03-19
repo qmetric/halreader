@@ -1,9 +1,9 @@
 package com.qmetric.hal.reader;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import com.google.common.reflect.TypeToken;
 import com.theoryinpractise.halbuilder.api.Link;
 import com.theoryinpractise.halbuilder.api.ReadableRepresentation;
 
@@ -91,12 +91,12 @@ public class HalResource
      * @param type Type
      * @return Object representation of raw JSON
      */
-    public <T> Optional<T> getValueAsObject(final String name, final TypeReference<T> type)
+    public <T> Optional<T> getValueAsObject(final String name, final TypeToken<T> type)
     {
         try
         {
             final String raw = getValueAsString(name).or(EMPTY);
-            final T object = objectMapper.readValue(raw, type);
+            final T object = objectMapper.readValue(raw, objectMapper.constructType(type.getType()));
             return Optional.fromNullable(object);
         }
         catch (IOException e)

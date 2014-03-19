@@ -25,7 +25,7 @@ Usage
   final HalResource hal = halReader.read(ioReader);
 ```
 
-See Javadoc for available HalResource methods.
+See Javadoc for available com.qmetric.hal.reader.HalResource methods.
 
 Library available from [Maven central repository](http://search.maven.org/)
 

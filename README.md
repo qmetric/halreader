@@ -15,14 +15,14 @@ Features
 
 * Reading of HAL properties containing JSON objects or arrays
 * [Jackson](https://github.com/FasterXML) configuration exposed for allowing greater control of JSON deserialisation
-
+* Delegates to common HalBuilder read functionality
 
 Usage
 -----
 
 ```java
   final HalReader halReader = new HalReader(new ObjectMapper());
-  final HalResource hal = halReader.read(reader);
+  final HalResource hal = halReader.read(ioReader);
 ```
 
 See Javadoc for available HalResource methods.

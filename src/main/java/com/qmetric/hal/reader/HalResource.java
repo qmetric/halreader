@@ -6,6 +6,8 @@ import com.google.common.base.Optional;
 import com.google.common.reflect.TypeToken;
 import com.theoryinpractise.halbuilder.api.Link;
 import com.theoryinpractise.halbuilder.api.ReadableRepresentation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,6 +20,8 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
  */
 public class HalResource
 {
+    private static final Logger LOGGER = LoggerFactory.getLogger(HalResource.class);
+
     private final ObjectMapper objectMapper;
 
     private final ReadableRepresentation representation;
@@ -101,6 +105,7 @@ public class HalResource
         }
         catch (IOException e)
         {
+            LOGGER.warn(String.format("failed to get value as object %s %s - will return an absent value", name, type), e);
             return Optional.absent();
         }
     }

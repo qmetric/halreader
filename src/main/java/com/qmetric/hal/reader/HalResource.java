@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.google.common.collect.FluentIterable.from;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
  * Adapter class for com.theoryinpractise.halbuilder.api.ReadableRepresentation allowing for easier JSON parsing.
@@ -99,13 +98,20 @@ public class HalResource
     {
         try
         {
-            final String raw = getValueAsString(name).or(EMPTY);
-            final T object = objectMapper.readValue(raw, objectMapper.constructType(type.getType()));
-            return Optional.fromNullable(object);
+            final Optional<String> raw = getValueAsString(name);
+
+            if (raw.isPresent())
+            {
+                return Optional.fromNullable((T) objectMapper.readValue(raw.get(), objectMapper.constructType(type.getType())));
+            }
+            else
+            {
+                return Optional.absent();
+            }
         }
         catch (IOException e)
         {
-            LOGGER.warn(String.format("failed to get value as object %s %s - will return an absent value", name, type), e);
+            LOGGER.info(String.format("failed to get value as object %s %s - will return an absent value", name, type), e.getMessage());
             return Optional.absent();
         }
     }

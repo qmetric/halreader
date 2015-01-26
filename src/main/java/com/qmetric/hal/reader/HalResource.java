@@ -117,7 +117,16 @@ public class HalResource
         }
     }
 
-    public Optional<String> getValueAsRawString(final String name)
+    /**
+     * Get underlying HalBuilder (https://github.com/HalBuilder) com.theoryinpractise.halbuilder.api.ReadableRepresentation.
+     * @return Underlying representation
+     */
+    public ReadableRepresentation getUnderlyingRepresentation()
+    {
+        return representation;
+    }
+
+    private Optional<String> getValueAsRawString(final String name)
     {
         try
         {
@@ -137,14 +146,5 @@ public class HalResource
             LOGGER.warn(String.format("failed to get raw value of object %s", name), e.getMessage());
             return Optional.absent();
         }
-    }
-
-    /**
-     * Get underlying HalBuilder (https://github.com/HalBuilder) com.theoryinpractise.halbuilder.api.ReadableRepresentation.
-     * @return Underlying representation
-     */
-    public ReadableRepresentation getUnderlyingRepresentation()
-    {
-        return representation;
     }
 }

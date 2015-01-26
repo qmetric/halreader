@@ -21,6 +21,6 @@
     "text": "abc",
     "num": 1,
     "bool": true,
-    "primitiveArray": ["a", "b"]
+    "primitiveNumericArray": [1, 2]
   }
 }

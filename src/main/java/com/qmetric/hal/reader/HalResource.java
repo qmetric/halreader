@@ -6,6 +6,7 @@ import com.google.common.base.Optional;
 import com.google.common.reflect.TypeToken;
 import com.theoryinpractise.halbuilder.api.Link;
 import com.theoryinpractise.halbuilder.api.ReadableRepresentation;
+import com.theoryinpractise.halbuilder.api.RepresentationFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +34,7 @@ public class HalResource
 
     /**
      * Get self link.
+     *
      * @return Self link
      */
     public Optional<Link> getResourceLink()
@@ -42,6 +44,7 @@ public class HalResource
 
     /**
      * Get link.
+     *
      * @param rel Relation name
      * @return Link
      */
@@ -52,6 +55,7 @@ public class HalResource
 
     /**
      * Get links.
+     *
      * @param rel Relation name
      * @return Links
      */
@@ -62,6 +66,7 @@ public class HalResource
 
     /**
      * Get embedded resources by relation
+     *
      * @param rel Relation name
      * @return Embedded resources
      */
@@ -80,6 +85,7 @@ public class HalResource
 
     /**
      * Get property value by name.
+     *
      * @param name property name
      * @return value as string
      */
@@ -90,6 +96,7 @@ public class HalResource
 
     /**
      * Get property value by parsing raw JSON as an object/ array.
+     *
      * @param name property name
      * @param type Type
      * @return Object representation of raw JSON
@@ -118,7 +125,28 @@ public class HalResource
     }
 
     /**
+     * Parse root resource as an object.
+     *
+     * @param type Type
+     * @return Object representation as an object
+     */
+    public <T> T getResourceAsObject(final TypeToken<T> type)
+    {
+        try
+        {
+            //noinspection unchecked
+            return (T) objectMapper.readValue(getUnderlyingRepresentation().toString(RepresentationFactory.HAL_JSON), objectMapper.constructType(type.getType()));
+        }
+        catch (IOException e)
+        {
+            LOGGER.warn("failed to parse resource as object", e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * Get underlying HalBuilder (https://github.com/HalBuilder) com.theoryinpractise.halbuilder.api.ReadableRepresentation.
+     *
      * @return Underlying representation
      */
     public ReadableRepresentation getUnderlyingRepresentation()

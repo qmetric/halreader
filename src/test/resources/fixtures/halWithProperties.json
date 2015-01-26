@@ -1,0 +1,11 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://localhost/something/1"
+    }
+  },
+  "text": "abc",
+  "num": 1,
+  "bool": true,
+  "primitiveNumericArray": [1, 2]
+}

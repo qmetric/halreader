@@ -16,13 +16,13 @@
           "text": "abc",
           "num": 1,
           "bool": true,
-          "primitiveArray": ["a", "b"]
+          "primitiveNumericArray": [1, 2]
         },
         {
           "text": "def",
           "num": 2,
           "bool": false,
-          "primitiveArray": ["c", "d"]
+          "primitiveNumericArray": [3, 4]
         }
       ]
     }

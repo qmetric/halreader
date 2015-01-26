@@ -1,5 +1,6 @@
 package com.qmetric.hal.reader
 
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.common.base.Optional
 import com.google.common.reflect.TypeToken
@@ -10,11 +11,11 @@ import spock.lang.Unroll
 
 class HalReaderTest extends Specification {
 
-    static final TestObject testObject1 = new TestObject("abc", 1, true, ["a", "b"])
+    static final TestObject testObject1 = new TestObject("abc", 1, true, [1, 2])
 
-    static final TestObject testObject2 = new TestObject("def", 2, false, ["c", "d"])
+    static final TestObject testObject2 = new TestObject("def", 2, false, [3, 4])
 
-    final halReader = new HalReader(new ObjectMapper())
+    final halReader = new HalReader(new ObjectMapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES))
 
     def "should read links"()
     {
@@ -53,13 +54,24 @@ class HalReaderTest extends Specification {
         resource.getValueAsObject(propertyName, type) == expected
 
         where:
-        resourcePath                       | propertyName | type                                    | expected
-        "halWithObjectProperty.json"       | "obj"        | TypeToken.of(TestObject.class)          | Optional.of(testObject1)
-        "halWithNestedObjectProperty.json" | "parent"     | TypeToken.of(TestParentObject.class)    | Optional.of(new TestParentObject(testObject1))
-        "halWithObjectProperty.json"       | "missing"    | TypeToken.of(TestObject.class)          | Optional.absent()
-        "halWithObjectProperty.json"       | "obj"        | new TypeToken<Map<String, Object>>() {} | Optional.of([text: "abc", num: 1, bool: true, primitiveArray: ["a", "b"]])
-        "halWithEmptyArrayProperty.json"   | "array"      | new TypeToken<List<String>>() {}        | Optional.of([])
-        "halWithArrayProperty.json"        | "array"      | new TypeToken<List<TestObject>>() {}    | Optional.of([testObject1, testObject2])
+        resourcePath                       | propertyName            | type                                    | expected
+        "halWithObjectProperty.json"       | "obj"                   | TypeToken.of(TestObject.class)          | Optional.of(testObject1)
+        "halWithNestedObjectProperty.json" | "parent"                | TypeToken.of(TestParentObject.class)    | Optional.of(new TestParentObject(testObject1))
+        "halWithObjectProperty.json"       | "missing"               | TypeToken.of(TestObject.class)          | Optional.absent()
+        "halWithObjectProperty.json"       | "obj"                   | new TypeToken<Map<String, Object>>() {} | Optional.of([text: "abc", num: 1, bool: true, primitiveNumericArray: [1, 2]])
+        "halWithEmptyArrayProperty.json"   | "array"                 | new TypeToken<List<String>>() {}        | Optional.of([])
+        "halWithArrayProperties.json"      | "array"                 | new TypeToken<List<TestObject>>() {}    | Optional.of([testObject1, testObject2])
+        "halWithArrayProperties.json"      | "primitiveArray"        | new TypeToken<List<String>>() {}        | Optional.of(["a", "b"])
+        "halWithArrayProperties.json"      | "primitiveNumericArray" | new TypeToken<List<Integer>>() {}       | Optional.of([1, 2])
+    }
+
+    def "should read resource as object"()
+    {
+        when:
+        final resource = halReader.read(reader("/fixtures/halWithProperties.json"))
+
+        then:
+        resource.getResourceAsObject(TypeToken.of(TestObject.class)) == testObject1
     }
 
     def "should read embedded resources"()
@@ -119,18 +131,18 @@ class HalReaderTest extends Specification {
 
         final boolean bool
 
-        final List<String> primitiveArray
+        final List<Integer> primitiveNumericArray
 
         @SuppressWarnings("GroovyUnusedDeclaration") TestObject()
         {}
 
-        TestObject(final String text, final Integer num, final Boolean bool, final List<String> primitiveArray)
+        TestObject(final String text, final Integer num, final Boolean bool, final List<Integer> primitiveNumericArray)
         {
 
             this.bool = bool
             this.num = num
             this.text = text
-            this.primitiveArray = primitiveArray
+            this.primitiveNumericArray = primitiveNumericArray
         }
 
         @Override public int hashCode()

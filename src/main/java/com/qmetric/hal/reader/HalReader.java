@@ -3,7 +3,6 @@ package com.qmetric.hal.reader;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.theoryinpractise.halbuilder.api.ContentRepresentation;
 import com.theoryinpractise.halbuilder.api.RepresentationFactory;
-import com.theoryinpractise.halbuilder.json.JsonRepresentationFactory;
 
 import java.io.Reader;
 
@@ -31,7 +30,7 @@ public class HalReader
     public HalReader(final ObjectMapper objectMapper)
     {
         this.objectMapper = objectMapper;
-        this.representationFactory = new JsonRepresentationFactory();
+        this.representationFactory = new OverridenJsonRepresentationFactory();
     }
 
     /**

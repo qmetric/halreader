@@ -1,8 +1,9 @@
 package com.qmetric.hal.reader;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.theoryinpractise.halbuilder.api.ReadableRepresentation;
+import com.theoryinpractise.halbuilder.api.ContentRepresentation;
 import com.theoryinpractise.halbuilder.api.RepresentationFactory;
+import com.theoryinpractise.halbuilder.json.JsonRepresentationFactory;
 
 import java.io.Reader;
 
@@ -40,7 +41,7 @@ public class HalReader
      */
     public HalResource read(final Reader reader)
     {
-        final ReadableRepresentation readableRepresentation = representationFactory.readRepresentation(reader);
+        final ContentRepresentation readableRepresentation = representationFactory.readRepresentation(RepresentationFactory.HAL_JSON, reader);
 
         return new HalResource(objectMapper, readableRepresentation);
     }

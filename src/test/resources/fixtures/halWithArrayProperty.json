@@ -4,5 +4,18 @@
       "href": "https://localhost/something/1"
     }
   },
-  "array": ["a", "b"]
+  "array": [
+    {
+      "text": "abc",
+      "num": 1,
+      "bool": true,
+      "primitiveArray": ["a", "b"]
+    },
+    {
+      "text": "def",
+      "num": 2,
+      "bool": false,
+      "primitiveArray": ["c", "d"]
+    }
+  ]
 }

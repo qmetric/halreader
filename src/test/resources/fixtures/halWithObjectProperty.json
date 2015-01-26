@@ -9,6 +9,7 @@
   "obj": {
     "text": "abc",
     "num": 1,
-    "bool": true
+    "bool": true,
+    "primitiveArray": ["a", "b"]
   }
 }

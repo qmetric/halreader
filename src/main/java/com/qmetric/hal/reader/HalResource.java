@@ -98,10 +98,11 @@ public class HalResource
     {
         try
         {
-            final Optional<String> raw = getValueAsString(name);
+            final Optional<String> raw = getValueAsRawString(name);
 
             if (raw.isPresent())
             {
+                //noinspection unchecked
                 return Optional.fromNullable((T) objectMapper.readValue(raw.get(), objectMapper.constructType(type.getType())));
             }
             else
@@ -111,7 +112,29 @@ public class HalResource
         }
         catch (IOException e)
         {
-            LOGGER.info(String.format("failed to get value as object %s %s - will return an absent value", name, type), e.getMessage());
+            LOGGER.warn(String.format("failed to get value as object %s %s - will return an absent value", name, type), e.getMessage());
+            return Optional.absent();
+        }
+    }
+
+    public Optional<String> getValueAsRawString(final String name)
+    {
+        try
+        {
+            final Optional value = Optional.fromNullable(representation.getValue(name, null));
+
+            if (value.isPresent())
+            {
+                return Optional.fromNullable(objectMapper.writeValueAsString(value.get()));
+            }
+            else
+            {
+                return Optional.absent();
+            }
+        }
+        catch (IOException e)
+        {
+            LOGGER.warn(String.format("failed to get raw value of object %s", name), e.getMessage());
             return Optional.absent();
         }
     }

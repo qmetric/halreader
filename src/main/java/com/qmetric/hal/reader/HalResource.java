@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.reflect.TypeToken;
+import com.theoryinpractise.halbuilder.api.ContentRepresentation;
 import com.theoryinpractise.halbuilder.api.Link;
 import com.theoryinpractise.halbuilder.api.ReadableRepresentation;
-import com.theoryinpractise.halbuilder.api.RepresentationFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,7 +105,7 @@ public class HalResource
     {
         try
         {
-            final Optional<String> raw = getValueAsRawString(name);
+            final Optional<String> raw = getValueAsString(name);
 
             if (raw.isPresent())
             {
@@ -135,7 +135,7 @@ public class HalResource
         try
         {
             //noinspection unchecked
-            return (T) objectMapper.readValue(getUnderlyingRepresentation().toString(RepresentationFactory.HAL_JSON), objectMapper.constructType(type.getType()));
+            return (T) objectMapper.readValue(((ContentRepresentation) getUnderlyingRepresentation()).getContent(), objectMapper.constructType(type.getType()));
         }
         catch (IOException e)
         {
@@ -152,27 +152,5 @@ public class HalResource
     public ReadableRepresentation getUnderlyingRepresentation()
     {
         return representation;
-    }
-
-    private Optional<String> getValueAsRawString(final String name)
-    {
-        try
-        {
-            final Optional value = Optional.fromNullable(representation.getValue(name, null));
-
-            if (value.isPresent())
-            {
-                return Optional.fromNullable(objectMapper.writeValueAsString(value.get()));
-            }
-            else
-            {
-                return Optional.absent();
-            }
-        }
-        catch (IOException e)
-        {
-            LOGGER.warn(String.format("failed to get raw value of object %s", name), e.getMessage());
-            return Optional.absent();
-        }
     }
 }

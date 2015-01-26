@@ -1,0 +1,30 @@
+{
+  "_links": {
+    "self": {
+      "href": "https://localhost/self/1"
+    }
+  },
+  "_embedded": {
+    "embeddedResource": {
+      "_links": {
+        "self": {
+          "href": "https://localhost/embedded/1"
+        }
+      },
+      "array": [
+        {
+          "text": "abc",
+          "num": 1,
+          "bool": true,
+          "primitiveNumericArray": [1, 2]
+        },
+        {
+          "text": "def",
+          "num": 2,
+          "bool": false,
+          "primitiveNumericArray": [3, 4]
+        }
+      ]
+    }
+  }
+}

@@ -2,7 +2,6 @@ package com.qmetric.hal.reader;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.io.CharStreams;
 import com.theoryinpractise.halbuilder.AbstractRepresentationFactory;
 import com.theoryinpractise.halbuilder.api.ContentRepresentation;
@@ -15,9 +14,7 @@ import com.theoryinpractise.halbuilder.impl.representations.MutableRepresentatio
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import static com.theoryinpractise.halbuilder.impl.api.Support.CURIES;
@@ -29,12 +26,16 @@ import static com.theoryinpractise.halbuilder.impl.api.Support.NAME;
 import static com.theoryinpractise.halbuilder.impl.api.Support.PROFILE;
 import static com.theoryinpractise.halbuilder.impl.api.Support.TITLE;
 
-public class JsonRepresentationReaderWithPrimitiveArraysBugFix implements RepresentationReader {
+/**
+ * Modified version of com.theoryinpractise.halbuilder.json.JsonRepresentationReader from https://github.com/HalBuilder/halbuilder-json (version 4.0.2).
+ * Only difference is that this class returns a raw JSON string representation for properties containing array/ object type values.
+ */
+public class OverriddenJsonRepresentationReader implements RepresentationReader {
     private final ObjectMapper mapper;
 
     private final AbstractRepresentationFactory representationFactory;
 
-    public JsonRepresentationReaderWithPrimitiveArraysBugFix(AbstractRepresentationFactory representationFactory) {
+    public OverriddenJsonRepresentationReader(AbstractRepresentationFactory representationFactory) {
         this.representationFactory = representationFactory;
         this.mapper = new ObjectMapper();
     }
@@ -124,26 +125,9 @@ public class JsonRepresentationReaderWithPrimitiveArraysBugFix implements Repres
             String fieldName = fieldNames.next();
             if (!Support.RESERVED_JSON_PROPERTIES.contains(fieldName)) {
                 JsonNode field = rootNode.get(fieldName);
-                if(field.isArray()) {
-                    List<Object> arrayValues = new ArrayList<Object>(field.size());
-                    for(JsonNode arrayValue : field) {
-                        // ********** Bug fix *****************************
-                        if (arrayValue.isObject())
-                        {
-                            arrayValues.add(ImmutableMap.copyOf(mapper.readValue(arrayValue.toString(), Map.class)));
-                        }
-                        else
-                        {
-                            arrayValues.add(arrayValue.isValueNode() ? arrayValue.asText() : arrayValue.toString());
-                        }
-                        // ********** Bug fix *****************************
-                    }
-                    resource.withProperty(fieldName, arrayValues);
-                } else {
-                    resource.withProperty(fieldName, field.isNull()
-                                                     ? null
-                                                     : ( !field.isContainerNode() ? field.asText() : ImmutableMap.copyOf(mapper.readValue(field.toString(), Map.class))));
-                }
+                resource.withProperty(fieldName, field.isNull()
+                                                 ? null
+                                                 : ( field.isContainerNode() ? field.toString() : field.asText()));
             }
         }
 

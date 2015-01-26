@@ -11,20 +11,10 @@
           "href": "https://localhost/embedded/1"
         }
       },
-      "array": [
-        {
-          "text": "abc",
-          "num": 1,
-          "bool": true,
-          "primitiveNumericArray": [1, 2]
-        },
-        {
-          "text": "def",
-          "num": 2,
-          "bool": false,
-          "primitiveNumericArray": [3, 4]
-        }
-      ]
+      "text": "abc",
+      "num": 1,
+      "bool": true,
+      "primitiveNumericArray": [1, 2]
     }
   }
 }

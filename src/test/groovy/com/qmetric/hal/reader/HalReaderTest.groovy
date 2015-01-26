@@ -65,7 +65,7 @@ class HalReaderTest extends Specification {
         "halWithArrayProperties.json"      | "primitiveNumericArray" | new TypeToken<List<Integer>>() {}       | Optional.of([1, 2])
     }
 
-    def "should read resource as object"()
+    def "should read root resource as object"()
     {
         when:
         final resource = halReader.read(reader("/fixtures/halWithProperties.json"))
@@ -74,10 +74,20 @@ class HalReaderTest extends Specification {
         resource.getResourceAsObject(TypeToken.of(TestObject.class)) == testObject1
     }
 
-    def "should read embedded resources"()
+    def "should read embedded resource as object"()
     {
         given:
         final resource = halReader.read(reader("/fixtures/halWithEmbeddedResource.json"))
+        final embedded = resource.getResourcesByRel("embeddedResource").first()
+
+        expect:
+        embedded.getResourceAsObject(new TypeToken<TestObject>() {}) == testObject1
+    }
+
+    def "should read embedded resources"()
+    {
+        given:
+        final resource = halReader.read(reader("/fixtures/halWithEmbeddedResourceWithArray.json"))
 
         when:
         final embedded = resource.getResourcesByRel("embeddedResource").first()
@@ -90,7 +100,7 @@ class HalReaderTest extends Specification {
     def "should return nothing when embedded resources not found"()
     {
         when:
-        final resource = halReader.read(reader("/fixtures/halWithEmbeddedResource.json"))
+        final resource = halReader.read(reader("/fixtures/halWithEmbeddedResourceWithArray.json"))
 
         then:
         resource.getResourcesByRel("missing").isEmpty()
@@ -127,14 +137,19 @@ class HalReaderTest extends Specification {
 
         final String text
 
-        final int num
+        final Integer num
 
-        final boolean bool
+        final Boolean bool
 
         final List<Integer> primitiveNumericArray
 
         @SuppressWarnings("GroovyUnusedDeclaration") TestObject()
-        {}
+        {
+            text = null
+            num = null
+            bool = null
+            primitiveNumericArray = null
+        }
 
         TestObject(final String text, final Integer num, final Boolean bool, final List<Integer> primitiveNumericArray)
         {

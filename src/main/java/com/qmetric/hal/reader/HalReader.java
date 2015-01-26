@@ -30,7 +30,7 @@ public class HalReader
     public HalReader(final ObjectMapper objectMapper)
     {
         this.objectMapper = objectMapper;
-        this.representationFactory = new OverridenJsonRepresentationFactory();
+        this.representationFactory = new OverriddenJsonRepresentationFactory();
     }
 
     /**

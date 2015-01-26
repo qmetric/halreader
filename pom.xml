@@ -3,7 +3,7 @@
 
     <groupId>com.qmetric</groupId>
     <artifactId>halreader</artifactId>
-    <version>1.5-SNAPSHOT</version>
+    <version>1.5</version>
     <packaging>jar</packaging>
     <name>halreader</name>
     <description>HAL+JSON library wrapper for HalBuilder (https://github.com/HalBuilder)</description>

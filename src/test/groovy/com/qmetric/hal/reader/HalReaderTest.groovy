@@ -2,7 +2,6 @@ package com.qmetric.hal.reader
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.google.common.base.Optional
 import com.google.common.reflect.TypeToken
 import org.apache.commons.lang3.builder.EqualsBuilder
 import org.apache.commons.lang3.builder.HashCodeBuilder
@@ -25,7 +24,7 @@ class HalReaderTest extends Specification {
         then:
         resource.getResourceLink().get().href == "https://localhost/self/1"
         resource.getLinkByRel("link").get().href == "https://localhost/link/1"
-        resource.getLinkByRel("missing") == Optional.absent()
+        resource.getLinkByRel("missing") == Optional.empty()
         resource.getLinksByRel("link").collect { it.href } == ["https://localhost/link/1"]
         resource.getLinksByRel("missing").collect { it.href } == []
         resource.getLinksByRel("links").collect { it.href } == ["https://localhost/links/1", "https://localhost/links/2"]
@@ -40,8 +39,8 @@ class HalReaderTest extends Specification {
         resource.getValueAsString("textVal") == Optional.of("str")
         resource.getValueAsString("numVal") == Optional.of("100")
         resource.getValueAsString("boolVal") == Optional.of("true")
-        resource.getValueAsString("nullVal") == Optional.absent()
-        resource.getValueAsString("missing") == Optional.absent()
+        resource.getValueAsString("nullVal") == Optional.empty()
+        resource.getValueAsString("missing") == Optional.empty()
         resource.getValueAsString("emptyVal") == Optional.of("")
     }
 
@@ -57,7 +56,7 @@ class HalReaderTest extends Specification {
         resourcePath                       | propertyName            | type                                    | expected
         "halWithObjectProperty.json"       | "obj"                   | TypeToken.of(TestObject.class)          | Optional.of(testObject1)
         "halWithNestedObjectProperty.json" | "parent"                | TypeToken.of(TestParentObject.class)    | Optional.of(new TestParentObject(testObject1))
-        "halWithObjectProperty.json"       | "missing"               | TypeToken.of(TestObject.class)          | Optional.absent()
+        "halWithObjectProperty.json"       | "missing"               | TypeToken.of(TestObject.class)          | Optional.empty()
         "halWithObjectProperty.json"       | "obj"                   | new TypeToken<Map<String, Object>>() {} | Optional.of([text: "abc", num: 1, bool: true, primitiveNumericArray: [1, 2]])
         "halWithEmptyArrayProperty.json"   | "array"                 | new TypeToken<List<String>>() {}        | Optional.of([])
         "halWithArrayProperties.json"      | "array"                 | new TypeToken<List<TestObject>>() {}    | Optional.of([testObject1, testObject2])

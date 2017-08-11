@@ -1,8 +1,6 @@
 package com.qmetric.hal.reader;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import com.google.common.reflect.TypeToken;
 import com.theoryinpractise.halbuilder.api.ContentRepresentation;
 import com.theoryinpractise.halbuilder.api.Link;
@@ -12,8 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
-
-import static com.google.common.collect.FluentIterable.from;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Adapter class for com.theoryinpractise.halbuilder.api.ReadableRepresentation allowing for easier JSON parsing.
@@ -39,7 +37,7 @@ public class HalResource
      */
     public Optional<Link> getResourceLink()
     {
-        return Optional.fromNullable(representation.getResourceLink());
+        return Optional.ofNullable(representation.getResourceLink());
     }
 
     /**
@@ -50,7 +48,7 @@ public class HalResource
      */
     public Optional<Link> getLinkByRel(final String rel)
     {
-        return Optional.fromNullable(representation.getLinkByRel(rel));
+        return Optional.ofNullable(representation.getLinkByRel(rel));
     }
 
     /**
@@ -74,13 +72,9 @@ public class HalResource
     {
         final List<? extends ReadableRepresentation> resources = representation.getResourcesByRel(rel);
 
-        return from(resources).transform(new Function<ReadableRepresentation, HalResource>()
-        {
-            @Override public HalResource apply(final ReadableRepresentation representation)
-            {
-                return new HalResource(objectMapper, representation);
-            }
-        }).toList();
+        return resources.stream()
+                .map(representation -> new HalResource(objectMapper, representation))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -91,7 +85,7 @@ public class HalResource
      */
     public Optional<String> getValueAsString(final String name)
     {
-        return Optional.fromNullable((String) representation.getValue(name, null));
+        return Optional.ofNullable((String) representation.getValue(name, null));
     }
 
     /**
@@ -110,17 +104,17 @@ public class HalResource
             if (raw.isPresent())
             {
                 //noinspection unchecked
-                return Optional.fromNullable((T) objectMapper.readValue(raw.get(), objectMapper.constructType(type.getType())));
+                return Optional.ofNullable((T) objectMapper.readValue(raw.get(), objectMapper.constructType(type.getType())));
             }
             else
             {
-                return Optional.absent();
+                return Optional.empty();
             }
         }
         catch (IOException e)
         {
             LOGGER.warn(String.format("failed to get value as object %s %s - will return an absent value", name, type), e.getMessage());
-            return Optional.absent();
+            return Optional.empty();
         }
     }
 

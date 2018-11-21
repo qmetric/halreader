@@ -113,7 +113,7 @@ public class HalResource
         }
         catch (IOException e)
         {
-            LOGGER.warn(String.format("failed to get value as object %s %s - will return an absent value", name, type), e.getMessage());
+            LOGGER.warn("failed to get value '{}' as object {} - will return an absent value, reason: {}", name, type, e.getMessage());
             return Optional.empty();
         }
     }
@@ -133,7 +133,7 @@ public class HalResource
         }
         catch (IOException e)
         {
-            LOGGER.warn("failed to parse resource as object", e.getMessage());
+            LOGGER.warn("failed to parse resource as object: {}", e.getMessage());
             throw new RuntimeException(e);
         }
     }
